@@ -1,0 +1,192 @@
+{% extends "admin/templates/admin_template.html"%}
+    
+{% block title %}Barang{% endblock %}
+
+{% block main %}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Barang</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{{url_for('admin_dashboard')}}">Home</a></li>
+              <li class="breadcrumb-item active">Data Barang</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+      <div class="container">
+        {% with messages = get_flashed_messages(with_categories=True) %}  
+         {% if messages %}  
+               {% for category, message in messages %}  
+                <div class="alert alert-{{category.0}} alert-dismissible">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                  <i class="icon fas fa-{{category.1}}"></i>
+                  Berhasil <strong>{{message}}</strong> barang!
+                </div> 
+               {% endfor %}  
+         {% endif %}  
+      {% endwith %} 
+      </div>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">DataTable with minimal features & hover style</h3>
+                <div class='float-sm-right'>
+                    <!-- <a href="#"> -->
+                        <!-- <button type="button" class="btn btn-success btn-sm" name="add">
+                            <ion-icon name="add-circle-outline"></ion-icon>Tambah 
+                        </button> -->
+                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-lg">
+                          <ion-icon name="add-circle-outline"></ion-icon>Tambah
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm swalDefaultSuccess">
+                          <ion-icon name="add-circle-outline"></ion-icon>Test
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm" onclick="Swal.fire('Good job!', 'Your imaginary file has been successfully add!', 'success')">
+                          <ion-icon name="add-circle-outline"></ion-icon>Test2
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm first">
+                          <ion-icon name="add-circle-outline"></ion-icon>Test3
+                        </button>
+                        <!-- modal -->
+                        <div class="modal fade" id="modal-lg">
+                          <div class="modal-dialog modal-lg">
+                            <!-- modal content -->
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title">Tambah mata pelajaran</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <form action="{{ url_for('admin_tambah_barang') }}" method="post">
+                                <div class="modal-body">
+                                  <div class="form-group">
+                                    <label for="exampleInputEmail1">Kode</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" name="kode">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="exampleInputEmail1">Mata Pelajaran</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" name="matapelajaran">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="exampleInputEmail1">Kelas</label>
+                                    <input type="text" class="form-control" id="exampleInputEmail1" name="kelas">
+                                  </div>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                  <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                                  <button type="submit" class="btn btn-primary">Simpan</button>
+                                </div>
+                              </form>
+                              
+                            </div>
+                            <!-- /.modal-contentswalDefaultSuccess -->
+                          </div>
+                          <!-- /.modal-dialog -->
+                        </div>
+                        <!-- /.modal -->
+                    <!-- </a> -->
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <table id="example1" class="table table-bordered table-hover">
+                  <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Kode</th>
+                    <th>Mata Pelajaran</th>
+                    <th>Kelas</th>
+                    <th style="width: 17%"></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                    {% for baris in mapels %}
+                    <tr>
+                        <td>{{loop.index}}</td>
+                        <td>{{baris.2}}</td>
+                        <td>{{baris.3}}</td>
+                        <td>{{baris.4}}</td>
+                        <td>
+                            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-default{{baris.0}}">
+                              <ion-icon name="add-circle-outline"></ion-icon>Ubah
+                            </button>
+                            <!-- modal -->
+                            <div class="modal fade" id="modal-default{{baris.0}}">
+                              <div class="modal-dialog modal-lg">
+                                <!-- modal content -->
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h4 class="modal-title">Ubah mata pelajaran</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <form action="{{url_for('admin_ubah_barang')}}" method="post">
+                                    <div class="modal-body">
+                                      <div class="form-group">
+                                        <label for="exampleInputEmail1">Kode</label>
+                                        <input type="hidden" name="tambah" value="{{baris.0}}">
+                                        <input type="text" class="form-control" id="exampleInputEmail1" name="kode" value="{{baris.2}}">
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="exampleInputEmail1">Mata Pelajaran</label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" name="matapelajaran" value="{{baris.3}}">
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="exampleInputEmail1">Kelas</label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" name="kelas" value="{{baris.4}}">
+                                      </div>
+                                    </div>
+                                    <div class="modal-footer justify-content-between">
+                                      <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                                      <button type="submit" class="btn btn-primary">Simpan perubahan</button>
+                                    </div>
+                                  </form>
+                                  
+                                </div>
+                                <!-- /.modal-content -->
+                              </div>
+                              <!-- /.modal-dialog -->
+                            </div>
+                            <!-- /.modal -->
+                          <a href="/admin/barang/hapus/{{baris.0}}">
+                            <button type="button" class="btn btn-danger btn-sm" name="delete" >
+                              <!-- <input type="hidden" name="id" value="{{baris.0}}"> onclick="confirm('Anda yakin untuk menghapus {{baris.2}}?')"-->
+                              <ion-icon name="trash-outline"></ion-icon>Hapus 
+                            </button>
+                          </a>
+                          
+                        </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+{% endblock %}
